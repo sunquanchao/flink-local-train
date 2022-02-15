@@ -9,6 +9,9 @@ import org.apache.flink.api.java.operators.DataSource;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.core.fs.FileSystem;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * <p/>
  * <li>title: flink 计数器</li>
@@ -24,7 +27,7 @@ public class JavaCounterApp {
     public static void main(String[] args) throws Exception {
 
         ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
-        DataSource<String> data = env.fromElements("hadoop","spark","flink","pyspark","storm");
+        DataSource<String> data = env.fromElements("hadoop","spark","flink","pyspark","storm","chaochao","mackchao","mack");
 
         DataSet<String> info = data.map(new RichMapFunction<String, String>() {
 
@@ -44,8 +47,13 @@ public class JavaCounterApp {
             }
         });
 
-        String filePath = "file:///Users/lipan/workspace/flink_demo/flink-local-train/src/main/resources/sink/java/";
-        info.writeAsText(filePath, FileSystem.WriteMode.OVERWRITE).setParallelism(2);
+        LocalDateTime nowDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        //String filePath = "file:///Users/lipan/workspace/flink_demo/flink-local-train/src/main/resources/sink/java/";
+        String filePath = "/Users/sunquanchao/workspace/flink/flink-local-train/src/main/resources/sink/java/"+nowDateTime.format(formatter);
+
+
+        info.writeAsText(filePath, FileSystem.WriteMode.OVERWRITE).setParallelism(4);
         JobExecutionResult jobResult = env.execute("CounterApp");
 
         // step3: 获取计数器

@@ -30,8 +30,8 @@ public class CustomJdbcSink extends RichSinkFunction<Integer> {
     public void open(Configuration parameters) throws Exception {
         // JDBC连接信息
         String USERNAME = "root";
-        String PASSWORD = "1234";
-        String DBURL = "jdbc:mysql://localhost:3306/test";
+        String PASSWORD = "123456";
+        String DBURL = "jdbc:mysql://localhost:3306/flink";
         // 加载JDBC驱动
         Class.forName("com.mysql.jdbc.Driver");
         // 获取数据库连接

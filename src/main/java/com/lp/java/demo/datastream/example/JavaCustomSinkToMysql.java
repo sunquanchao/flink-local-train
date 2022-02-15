@@ -14,6 +14,8 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
  * <li>Date: 2019/12/29 5:00 下午</li>
  * <li>Version: V1.0</li>
  * <li>Description: Sink输出到Mysql</li>
+ *
+ * 监听7777端口（前提通过nc -lk 7777 启动服务）
  */
 public class JavaCustomSinkToMysql {
 
@@ -21,20 +23,27 @@ public class JavaCustomSinkToMysql {
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        DataStreamSource<String> source =  env.socketTextStream("localhost", 7777);
+        DataStreamSource<String> source =  env.socketTextStream("localhost", 7777);//nc -lk  7777
+
 
         SingleOutputStreamOperator<Student> studentStream =  source.map(new MapFunction<String, Student>() {
             @Override
             public Student map(String value) throws Exception {
 
-                String[] splits = value.split(",");
+                try{
+                    String[] splits = value.split(",");
 
-                Student stu = new Student();
-                stu.setId(Integer.parseInt(splits[0]));
-                stu.setName(splits[1]);
-                stu.setAge(Integer.parseInt(splits[2]));
+                    Student stu = new Student();
+                    stu.setId(Integer.parseInt(splits[0]));
+                    stu.setName(splits[1]);
+                    stu.setAge(Integer.parseInt(splits[2]));
+                    return stu;
+                }catch (Exception e){
+                    return null;
+                }
 
-                return stu;
+
+
             }
         });
 

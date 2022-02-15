@@ -14,6 +14,10 @@ import java.sql.PreparedStatement;
  * <li>Date: 2019/12/29 5:00 下午</li>
  * <li>Version: V1.0</li>
  * <li>Description: Sink写出到Mysql</li>
+ *
+ *
+ *
+ *
  */
 public class SinkToMysql extends RichSinkFunction<Student>{
     Connection connection;
@@ -24,9 +28,8 @@ public class SinkToMysql extends RichSinkFunction<Student>{
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-
-            String url = "jdbc:mysql://localhost:3306/flink_demo";
-            conn = DriverManager.getConnection(url,"root","1234");
+            String url = "jdbc:mysql://localhost:3306/flink";
+            conn = DriverManager.getConnection(url,"root","123456");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,8 +50,6 @@ public class SinkToMysql extends RichSinkFunction<Student>{
         connection = getConnection();
         String sql = "insert into student(id,name,age) values (?,?,?)";
         ps = connection.prepareStatement(sql);
-
-
         System.out.println("open");
 
     }
@@ -58,11 +59,14 @@ public class SinkToMysql extends RichSinkFunction<Student>{
     public void invoke(Student value, Context context) throws Exception {
         System.out.println("invoke~~~~~~~~~");
         // 未前面的占位符赋值
-        ps.setInt(1, value.getId());
-        ps.setString(2, value.getName());
-        ps.setInt(3, value.getAge());
+        if(null != value){
+            ps.setInt(1, value.getId());
+            ps.setString(2, value.getName());
+            ps.setInt(3, value.getAge());
 
-        ps.executeUpdate();
+            ps.executeUpdate();
+        }
+
 
     }
 

@@ -3,6 +3,7 @@ package com.lp.scala.demo.dataset
 import org.apache.flink.api.common.functions.RichMapFunction
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.configuration.Configuration
+//import org.apache.flink.streaming.api.scala._
 
 import scala.collection.mutable
 
